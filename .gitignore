@@ -107,4 +107,5 @@ typings/
 
 dist
 data/challenge-m-backend-cacde0f5638f.json
+src/config/challenge-m-backend-cacde0f5638f.json
 data/no-save.txt

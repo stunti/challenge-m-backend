@@ -2,6 +2,7 @@ import { Controller, Get, Param } from '@nestjs/common';
 import { WebsiteService } from 'services/website.service';
 import { WebsiteDTO } from 'models/website.dto';
 import { Observable } from 'rxjs';
+import { scan } from 'rxjs/operators';
 
 @Controller('website')
 export class WebsiteController {
@@ -9,13 +10,18 @@ export class WebsiteController {
 
     @Get()
     getWebsites(): Observable<WebsiteDTO[]>  {
-        const websites = this.websiteService.getWebsites();
-        return websites;
+			this.websiteService.requestWebsites();
+			const websites = this.websiteService.listenWebsites();
+			
+			// Accumulate into an array
+			return websites.pipe(scan((acc, val) => [...acc, val], []));
     }
 
     @Get(':websiteID')
     getWebsite(@Param('websiteID') websiteID): Observable<WebsiteDTO> {
-        const website = this.websiteService.getWebsite(websiteID);
-        return website;
+			this.websiteService.requestWebsite(websiteID);
+			const website = this.websiteService.listenWebsites();
+ 
+      return website;
     }
 } 
