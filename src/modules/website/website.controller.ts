@@ -12,6 +12,7 @@ import { WebsiteDTO } from "models/website.dto";
 import { throwError, Observable } from "rxjs";
 import { scan, catchError, finalize, map  } from "rxjs/operators";
 import { plainToClass } from "class-transformer";
+import moment = require("moment-timezone");
 
 @Controller("website")
 @UseInterceptors(ClassSerializerInterceptor)
@@ -24,14 +25,10 @@ export class WebsiteController {
     @Param("startDate") startDate: string,
     @Param("endDate") endDate: string
   ): Observable<WebsiteDTO[]> {
-		const startDt = new Date(startDate); 
+		const startDt = moment.tz(startDate, "UTC"); 
+    const endDt =  moment.tz(endDate, "UTC"); 
 
-		console.log("startdate, ", startDate, startDt )
-    const endDt = new Date(endDate);
-		
-		console.log("endDate, ", endDate, endDt )
-    
-    this.websiteService.requestWebsites(startDt, endDt); 
+		this.websiteService.requestWebsites(startDt, endDt); 
     const websites = this.websiteService.listenWebsites();
 
     // Accumulate into an array
@@ -50,7 +47,6 @@ export class WebsiteController {
 				return plainToClass(WebsiteDTO, val);
 			}))
 			.pipe(scan((acc, val) => [...acc, val], []))
-			.pipe(finalize(() => console.log('Sequence complete')));
   }
 
 
@@ -60,8 +56,5 @@ export class WebsiteController {
     const website = this.websiteService.listenWebsites();
 
 		return website;
-		
-		// return new WebsiteDTO({ id: 1, date: new Date("2019/01/01"), name: "g1", visits: 10 });
-
   }
 }

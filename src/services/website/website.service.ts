@@ -2,6 +2,8 @@ import { Injectable, Scope } from "@nestjs/common";
 import { Observable, of, Subject } from "rxjs";
 import { WebsiteDTO } from "models/website.dto";
 import { FirebaseService } from "../firebase/firebase.service";
+import moment = require("moment-timezone");
+
 
 @Injectable({ scope: Scope.REQUEST })
 export class WebsiteService {
@@ -11,14 +13,14 @@ export class WebsiteService {
     this.sub = new Subject<WebsiteDTO>();
   }
 
-  requestWebsites(startDate: Date, endDate: Date): void {
+  requestWebsites(startDate: moment.Moment, endDate: moment.Moment): void {
     this.fbService
       .getApp()
       .database()
       .ref("websites")
       .orderByChild("date")
-      .startAt(startDate.toISOString())
-      .endAt(endDate.toISOString())
+      .startAt(startDate.format("YYYY-MM-DDTHH:mm:ssZ"))
+      .endAt(endDate.format("YYYY-MM-DDTHH:mm:ssZ"))
       .once("value")
       .then(snapshot => {
         const snap = snapshot.val();
@@ -28,7 +30,12 @@ export class WebsiteService {
         }
         for (const key in snap) {
           if (snap[key] != null) {
-            this.sub.next(snap[key]);
+						const obj = new WebsiteDTO({
+							visits: snap[key].visits,
+							name: snap[key].name,
+							datetime: moment.tz(snap[key].date, "UTC"),
+						});
+            this.sub.next(obj);
           }
         }
       })

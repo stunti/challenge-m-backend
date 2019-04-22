@@ -1,6 +1,6 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import * as request from 'supertest';
+import  request from 'supertest';
 import { AppModule } from '../src/modules/app/app.module';
 import { WebsiteModule } from '../src/modules/website/website.module';
 
@@ -46,8 +46,8 @@ describe('WebsiteModule (e2e)', () => {
   it('/website/2016-01-06/2016-01-07 (GET)', () => {
     return request(app.getHttpServer())
       .get('/website/2016-01-06/2016-01-07')
-     // .expect(200)
-			.expect(`[{"name":"www.bing.com","visits":14065457,"date":"2016-01-05"},{"name":"www.ebay.com.au","visits":19831166,"date":"2016-01-05"},{"name":"www.facebook.com","visits":104346720,"date":"2016-01-05"},{"name":"mail.live.com","visits":21536612,"date":"2016-01-05"},{"name":"www.wikipedia.org","visits":13246531,"date":"2016-01-05"},{"name":"au.yahoo.com","visits":11492756,"date":"2016-01-05"},{"name":"www.google.com","visits":26165099,"date":"2016-01-05"},{"name":"ninemsn.com.au","visits":21734381,"date":"2016-01-05"},{"name":"www.youtube.com","visits":59811438,"date":"2016-01-05"},{"name":"www.google.com.au","visits":151749278,"date":"2016-01-05"}]`);
+      .expect(200)
+			.expect([{"name":"www.bing.com","visits":14065457,"date":"2016-01-06"},{"name":"www.ebay.com.au","visits":19831166,"date":"2016-01-06"},{"name":"www.facebook.com","visits":104346720,"date":"2016-01-06"},{"name":"mail.live.com","visits":21536612,"date":"2016-01-06"},{"name":"www.wikipedia.org","visits":13246531,"date":"2016-01-06"},{"name":"au.yahoo.com","visits":11492756,"date":"2016-01-06"},{"name":"www.google.com","visits":26165099,"date":"2016-01-06"},{"name":"ninemsn.com.au","visits":21734381,"date":"2016-01-06"},{"name":"www.youtube.com","visits":59811438,"date":"2016-01-06"},{"name":"www.google.com.au","visits":151749278,"date":"2016-01-06"}]);
 	});	
 	
 	afterAll(async () => {
