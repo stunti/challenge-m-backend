@@ -1,6 +1,6 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { WebsiteService } from './website.service';
-import { FirebaseService } from './firebase.service';
+import { Test, TestingModule } from "@nestjs/testing";
+import { WebsiteService } from "./website.service";
+import { FirebaseService } from "../firebase/firebase.service";
 
 describe("WebsitesService", () => {
   let service: WebsiteService;

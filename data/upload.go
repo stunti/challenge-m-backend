@@ -17,8 +17,8 @@ import (
 )
 
 type Website struct {
-    Date time.Time   `json:"date"`
-    Name  string   `json:"website"`
+    Date string   `json:"date"`
+    Name  string   `json:"name"`
     Visits   int `json:"visits"`
 }
 
@@ -48,9 +48,9 @@ func main() {
 				if err !=nil {
 					fmt.Printf("Cannot evaluate #%v\n", line)
 					continue;
-				}
+				}//2016-01-06T00:00:00.000Z
         websites = append(websites, Website{
-            Date: dt,
+            Date: dt.Format("2006-01-02T15:04:05.000Z"),
             Name:  line[1],
             Visits: visit,
         })

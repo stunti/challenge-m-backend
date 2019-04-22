@@ -1,7 +1,11 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { WebsiteController } from "./website.controller";
-import { WebsiteService } from "../../services/website.service";
-import { FirebaseService } from "../../services/firebase.service";
+import { WebsiteService } from "../../services/website/website.service";
+import { WebsiteMockService } from "../../services/website/website.service.mock";
+import { FirebaseService } from "../../services/firebase/firebase.service";
+import { FirebaseMockService } from "../../services/firebase/firebase.service.mock";
+
+
 
 describe("WebsiteController", () => {
   let module: TestingModule;
@@ -9,16 +13,65 @@ describe("WebsiteController", () => {
   beforeAll(async () => {
     module = await Test.createTestingModule({
       controllers: [WebsiteController],
-      providers: [WebsiteService, FirebaseService]
+			providers: [
+				{provide: WebsiteService, useClass: WebsiteMockService},
+				{provide: FirebaseService, useClass: FirebaseMockService},
+
+			]
     }).compile();
   });
 
-  describe("root", () => {
-    it('should return "Hello World!"', () => {
+  describe("getWebsites", () => {
+    it('should return two website', done => {
       const websiteController = module.get<WebsiteController>(
         WebsiteController
-      );
-      // expect(websiteController.root()).toBe('Hello World!');
-    });
+			);
+			const startDt = "2019-01-01";
+			const endDt = "2019-01-02";
+			websiteController.getWebsites(startDt, endDt).subscribe({
+				next: val => {
+					expect(val).toBeInstanceOf(Array);
+					expect(val.length).toEqual(2);
+					expect(new Date(val[0].date).getTime()).toBeGreaterThanOrEqual(new Date(startDt).getTime());
+					expect(new Date(val[1].date).getTime()).toBeLessThanOrEqual(new Date(endDt).getTime());
+				},
+				complete: () => done(),
+			});
+		});
+
+    it('should return three website', done => {
+      const websiteController = module.get<WebsiteController>(
+        WebsiteController
+			);
+			const startDt = "2019-01-01";
+			const endDt = "2019-01-03";
+			websiteController.getWebsites(startDt, endDt).subscribe({
+				next: val => {
+					expect(val).toBeInstanceOf(Array);
+					expect(val.length).toEqual(3);
+					expect(new Date(val[0].date).getTime()).toBeGreaterThanOrEqual(new Date(startDt).getTime());
+					expect(new Date(val[1].date).getTime()).toBeLessThanOrEqual(new Date(endDt).getTime());
+					expect(new Date(val[2].date).getTime()).toBeLessThanOrEqual(new Date(endDt).getTime());
+				},
+				complete: () => done(),
+			});
+		});
+				
+
+    it('should return zero website', done => {
+      const websiteController = module.get<WebsiteController>(
+        WebsiteController
+			);
+			const startDt = "2018-01-01";
+			const endDt = "2018-01-03";
+			websiteController.getWebsites(startDt, endDt).subscribe({
+				next: val => {
+					expect(val).toBeInstanceOf(Array);
+					expect(val.length).toEqual(0);
+				},
+				complete: () => done(),
+			});
+		});		
+
   });
 });
