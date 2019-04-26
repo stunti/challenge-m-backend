@@ -13,6 +13,7 @@ import { throwError, Observable } from "rxjs";
 import { scan, catchError, finalize, map  } from "rxjs/operators";
 import { plainToClass } from "class-transformer";
 import moment = require("moment-timezone");
+import { ApiModelProperty } from "@nestjs/swagger";
 
 @Controller("website")
 @UseInterceptors(ClassSerializerInterceptor)
@@ -33,7 +34,6 @@ export class WebsiteController {
 
     // Accumulate into an array
     return websites
-
       .pipe(
         catchError(err => {
           if (err != null) {
