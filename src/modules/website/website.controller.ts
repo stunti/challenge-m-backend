@@ -37,9 +37,9 @@ export class WebsiteController {
       .pipe(
         catchError(err => {
           if (err != null) {
-            return throwError(new HttpException(err, HttpStatus.FORBIDDEN));
+            return throwError(new HttpException(err, HttpStatus.NO_CONTENT));
           } else {
-            return throwError(new HttpException("Forbidden", HttpStatus.FORBIDDEN));
+            return throwError(new HttpException("Forbidden", HttpStatus.NO_CONTENT));
           }
         })
 			)
