@@ -31,6 +31,7 @@
     "firebase-admin": "^7.3.0",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.25",
+    "npx": "^10.2.0",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
