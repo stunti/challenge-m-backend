@@ -4,6 +4,9 @@
   "description": "A bookstore built with Nest.js",
   "author": "Olususi Oluyemi",
   "license": "MIT",
+  "engines": {
+    "node": "11.10.0"
+  },
   "scripts": {
     "build": "tsc",
     "format": "prettier --write \"src/**/*.ts\"",
