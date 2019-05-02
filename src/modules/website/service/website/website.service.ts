@@ -33,31 +33,7 @@ export class WebsiteService {
       .startAt(startDate.format("YYYY-MM-DDTHH:mm:ssZ"))
       .endAt(endDate.format("YYYY-MM-DDTHH:mm:ssZ"))
       .once("value")
-      .then(snapshot => {
-        const snap = snapshot.val();
-        if (snap == null || snap.length == 0) {
-          this.sub.error("empty result");
-          return; 
-        }
-        for (const key in snap) {
-          if (snap[key] != null) {
-
-            // filter websites based on blocked list  
-            const blocked = this.blockingService.blockedWebsite;
-            
-            if (!this.blockingService.isBlocked(snap[key].name, moment.tz(snap[key].date, "UTC"))) {
-              const obj = new WebsiteDTO({
-                visits: snap[key].visits,
-                name: snap[key].name,
-                datetime: moment.tz(snap[key].date, "UTC"),
-              });
-              this.sub.next(obj);
-            } else {
-              console.log("Website is blocked", snap[key].name);
-            }
-          }
-        }
-      })
+      .then(this.processSnapshot)
       .then(() => this.sub.complete());
   }
 
@@ -65,6 +41,32 @@ export class WebsiteService {
     return this.sub.asObservable();
   }
 
+  processSnapshot(snapshot) {
+    
+    const snap = snapshot.val();
+    if (snap == null || snap.length == 0) {
+      this.sub.error("empty result");
+      return; 
+    }
+    for (const key in snap) {
+      if (snap[key] != null) {
+
+        // filter websites based on blocked list  
+        const blocked = this.blockingService.blockedWebsite;
+        
+        if (!this.blockingService.isBlocked(snap[key].name, moment.tz(snap[key].date, "UTC"))) {
+          const obj = new WebsiteDTO({
+            visits: snap[key].visits,
+            name: snap[key].name,
+            datetime: moment.tz(snap[key].date, "UTC"),
+          });
+          this.sub.next(obj);
+        } else {
+          console.log("Website is blocked", snap[key].name);
+        }
+      }
+    }
+  }
   requestWebsite(websiteID): void {
     const id = Number(websiteID);
 

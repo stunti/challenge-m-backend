@@ -1,5 +1,5 @@
-import { Injectable, Scope, HttpService } from "@nestjs/common";
-import { Observable, of, Subject, interval, BehaviorSubject } from "rxjs";
+import { Injectable, Scope, HttpService, OnApplicationShutdown, OnApplicationBootstrap } from "@nestjs/common";
+import { Observable, of, Subject, interval, BehaviorSubject, Subscription } from "rxjs";
 import { WebsiteDTO } from "models/website.dto";
 import { FirebaseService } from "../firebase/firebase.service";
 import { startWith } from "rxjs/operators";
@@ -20,25 +20,39 @@ interface IBlockedWebsiteInput {
 };
 
 @Injectable({ })
-export class BlockingService {
+export class BlockingService implements OnApplicationShutdown, OnApplicationBootstrap {
 
     private _blockedWebsite: Array<IBlockedWebsite>;
+    private subscript: Subscription;
+    
     constructor(private http: HttpService) {
+        
+        
+    }
 
+    onApplicationBootstrap() {
         //grab every 10s the list of files
-        interval(10000)
+        this.subscript = interval(10000)
         .pipe(startWith(0))
         .subscribe(() => { 
             this.fetchList();
         }); 
     }
 
-    fetchList() {
+    onApplicationShutdown(signal: string) {
+        this.subscript.unsubscribe();
+    }
 
+    fetchList() {
         const url = 'http://private-1de182-mamtrialrankingadjustments4.apiary-mock.com/exclusions';
+        console.log("[fetchList] ", url)
         this.http
-            .get(url, {transformResponse: this.transformResponse})
-            .subscribe(this.processResponse);
+            .get(url, {transformResponse: (data, headers) => this.transformResponse(data, headers)})
+            .subscribe({
+                next: response => this.processResponse(response),
+                complete:() => {},
+                error:(err) => {console.log("Cannot retrieve blocked list")}
+            });
     }
 
     get blockedWebsite() {
@@ -48,7 +62,8 @@ export class BlockingService {
     transformResponse(data, headers) {
         let arr = [];
         const obj = JSON.parse(data);   
-        
+        console.log("transformResponse")
+
         for (let i = 0; i < obj.length; i++) {
 
             arr.push(<IBlockedWebsiteInput>{
@@ -61,6 +76,7 @@ export class BlockingService {
     }
 
     processResponse(response: AxiosResponse<IBlockedWebsiteInput>) {
+        //console.log("response", response.data, response.data instanceof Array);
         if (response.data instanceof Array) {
             this._blockedWebsite = new Array<IBlockedWebsite>();
             for (let i = 0; i < response.data.length; i++) {
@@ -96,12 +112,11 @@ export class BlockingService {
                 obj.name == name &&
                 date.isAfter(start) &&
                 date.isBefore(end)
-                ) {
-                    return true;
-                }else {
-                    return false;
-                
-                }
+            ) {
+                return true;
+            } else {
+                return false;
+            }
         }
         return false;
     }
