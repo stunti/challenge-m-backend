@@ -3,14 +3,25 @@ import { Observable, of, Subject } from "rxjs";
 import { WebsiteDTO } from "models/website.dto";
 import { FirebaseService } from "../firebase/firebase.service";
 import moment = require("moment-timezone");
+import { BlockingService, IBlockedWebsite } from "../blocking/blocking.service";
 
 
 @Injectable({ scope: Scope.REQUEST })
 export class WebsiteService {
   private sub: Subject<WebsiteDTO>;
+  private blockedWebsite: Array<IBlockedWebsite>;
 
-  constructor(private readonly fbService: FirebaseService) {
-    this.sub = new Subject<WebsiteDTO>();
+  constructor(
+    private readonly fbService: FirebaseService,
+    private readonly blockingService: BlockingService,
+  ) {
+      this.sub = new Subject<WebsiteDTO>();
+      this.blockedWebsite = new Array<IBlockedWebsite>();
+      // this.blockingService.listen().subscribe({ 
+      //   next: data => {
+      //     this.blockedWebsite.push(data);
+      //   }
+      // })
   }
 
   requestWebsites(startDate: moment.Moment, endDate: moment.Moment): void {
@@ -30,12 +41,20 @@ export class WebsiteService {
         }
         for (const key in snap) {
           if (snap[key] != null) {
-						const obj = new WebsiteDTO({
-							visits: snap[key].visits,
-							name: snap[key].name,
-							datetime: moment.tz(snap[key].date, "UTC"),
-						});
-            this.sub.next(obj);
+
+            // filter websites based on blocked list  
+            const blocked = this.blockingService.blockedWebsite;
+            
+            if (!this.blockingService.isBlocked(snap[key].name, moment.tz(snap[key].date, "UTC"))) {
+              const obj = new WebsiteDTO({
+                visits: snap[key].visits,
+                name: snap[key].name,
+                datetime: moment.tz(snap[key].date, "UTC"),
+              });
+              this.sub.next(obj);
+            } else {
+              console.log("Website is blocked", snap[key].name);
+            }
           }
         }
       })

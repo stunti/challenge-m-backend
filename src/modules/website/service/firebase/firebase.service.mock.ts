@@ -1,5 +1,5 @@
 import * as firebase from "firebase-admin";
-import * as serviceAccount from "../../config/challenge-m-backend-cacde0f5638f.json";
+import * as serviceAccount from "../../../../config/challenge-m-backend-cacde0f5638f.json";
 import { Injectable } from "@nestjs/common";
 
 const params = {
@@ -16,23 +16,17 @@ const params = {
 };
 
 @Injectable()
-export class FirebaseService {
-  private static app;
+export class FirebaseMockService {
 
   constructor() {
-    if (FirebaseService.app == null) {
-      FirebaseService.init();
-    }
+    
   }
 
   static init(): void {
-    FirebaseService.app = firebase.initializeApp({
-      databaseURL: "https://challenge-m-backend.firebaseio.com",
-      credential: firebase.credential.cert(params)
-    });
+    
   }
 
   getApp(): any {
-    return FirebaseService.app;
+    return {};
   }
 }

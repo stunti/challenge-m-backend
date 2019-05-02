@@ -1,13 +1,23 @@
-import { Module } from "@nestjs/common";
+import { Module, HttpModule } from "@nestjs/common";
 import { WebsiteController } from "./website.controller";
-import { WebsiteService } from "../../services/website/website.service";
-import { FirebaseService } from "services/firebase/firebase.service";
+import { WebsiteService } from "./service/website/website.service";
+import { FirebaseService } from "modules/website/service/firebase/firebase.service";
+import { BlockingService } from "./service/blocking/blocking.service";
 
 @Module({
-  controllers: [WebsiteController],
-  providers: [
+	controllers: [WebsiteController],
+	providers: [
 		WebsiteService, 
-		FirebaseService
+		FirebaseService,
+		BlockingService,
+	],
+	exports: [
+		WebsiteService, 
+		FirebaseService,
+		BlockingService,
+	],
+	imports: [
+		HttpModule,
 	]
 })
 export class WebsiteModule {}
