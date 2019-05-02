@@ -38,15 +38,22 @@ jobs:
       - store_artifacts:
           path: coverage
           prefix: coverage
+  deploy:
+    executor: heroku/default
+    steps:
+      - checkout
+      - heroku/install
+      - heroku/deploy-via-git:
+          only-branch: master          
 
 workflows:
   version: 2
   build_and_test:
     jobs:
       - build
-      - heroku_deploy:
-        jobs:
-          - heroku/deploy-via-git
+  heroku_deploy:
+    jobs:
+      - deploy
       # - test:
       #     requires:
       #       - build
