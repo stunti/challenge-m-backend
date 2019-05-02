@@ -1,4 +1,6 @@
 version: 2
+orbs:
+  heroku: circleci/heroku@1.0.0
 jobs:
   build:
     working_directory: ~/mern-starter
@@ -42,9 +44,12 @@ workflows:
   build_and_test:
     jobs:
       - build
-      - test:
-          requires:
-            - build
-          filters:
-            branches:
-              only: master
+      - heroku_deploy:
+        jobs:
+          - heroku/deploy-via-git
+      # - test:
+      #     requires:
+      #       - build
+      #     filters:
+      #       branches:
+      #         only: master
