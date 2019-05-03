@@ -31,7 +31,7 @@ export class BlockingService implements OnApplicationShutdown, OnApplicationBoot
 
     onApplicationBootstrap() {
         //grab every 10s the list of files
-        this.subscript = interval(10000)
+        this.subscript = interval(60000)
         .pipe(startWith(0))
         .subscribe(() => { 
             this.fetchList();

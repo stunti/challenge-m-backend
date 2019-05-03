@@ -9,19 +9,12 @@ import { WebsiteDTO } from "../../../../models/website.dto";
 @Injectable({ scope: Scope.REQUEST })
 export class WebsiteService {
   private sub: Subject<WebsiteDTO>;
-  private blockedWebsite: Array<IBlockedWebsite>;
 
   constructor(
     private readonly fbService: FirebaseService,
-    private readonly blockingService: BlockingService,
+    private readonly blockService: BlockingService,
   ) {
       this.sub = new Subject<WebsiteDTO>();
-      this.blockedWebsite = new Array<IBlockedWebsite>();
-      // this.blockingService.listen().subscribe({ 
-      //   next: data => {
-      //     this.blockedWebsite.push(data);
-      //   }
-      // })
   }
 
   requestWebsites(startDate: moment.Moment, endDate: moment.Moment): void {
@@ -33,7 +26,7 @@ export class WebsiteService {
       .startAt(startDate.format("YYYY-MM-DDTHH:mm:ssZ"))
       .endAt(endDate.format("YYYY-MM-DDTHH:mm:ssZ"))
       .once("value")
-      .then(this.processSnapshot)
+      .then((snap) => this.processSnapshot(snap))
       .then(() => this.sub.complete());
   }
 
@@ -50,11 +43,8 @@ export class WebsiteService {
     }
     for (const key in snap) {
       if (snap[key] != null) {
-
-        // filter websites based on blocked list  
-        const blocked = this.blockingService.blockedWebsite;
         
-        if (!this.blockingService.isBlocked(snap[key].name, moment.tz(snap[key].date, "UTC"))) {
+        if (!this.blockService.isBlocked(snap[key].name, moment.tz(snap[key].date, "UTC"))) {
           const obj = new WebsiteDTO({
             visits: snap[key].visits,
             name: snap[key].name,
