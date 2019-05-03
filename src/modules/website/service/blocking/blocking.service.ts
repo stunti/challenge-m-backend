@@ -1,10 +1,9 @@
-import { Injectable, Scope, HttpService, OnApplicationShutdown, OnApplicationBootstrap } from "@nestjs/common";
-import { Observable, of, Subject, interval, BehaviorSubject, Subscription } from "rxjs";
-import { WebsiteDTO } from "models/website.dto";
-import { FirebaseService } from "../firebase/firebase.service";
+import { Injectable, HttpService, OnApplicationShutdown, OnApplicationBootstrap } from "@nestjs/common";
+import { interval, Subscription } from "rxjs";
+
 import { startWith } from "rxjs/operators";
 import moment = require("moment-timezone");
-import Axios, { AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 
 export interface IBlockedWebsite {
     dtStart: moment.Moment;
@@ -24,7 +23,7 @@ export class BlockingService implements OnApplicationShutdown, OnApplicationBoot
 
     private _blockedWebsite: Array<IBlockedWebsite>;
     private subscript: Subscription;
-    
+
     constructor(private http: HttpService) {
         
         

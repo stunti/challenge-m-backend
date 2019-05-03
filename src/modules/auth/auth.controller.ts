@@ -1,12 +1,12 @@
 import { Controller, UseGuards, HttpStatus, Response, Request, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiUseTags } from '@nestjs/swagger';
+import { AuthService } from './service/auth/auth.service';
+import { UserService } from '../user/service/user/user.service';
+import { LoginUserDto } from '../user/dto/loginUser.dto';
+import { IUser } from '../user/interface/user.interface';
+import { CreateUserDto } from '../user/dto/ createUser.dto';
 
-import { AuthService } from 'modules/auth/service/auth/auth.service';
-import { UserService } from 'modules/user/service/user/user.service';
-import { CreateUserDto } from 'modules/user/dto/ createUser.dto';
-import { LoginUserDto } from 'modules/user/dto/loginUser.dto';
-import { IUser } from 'modules/user/interface/user.interface';
 
 @ApiUseTags('auth')
 @Controller('auth')

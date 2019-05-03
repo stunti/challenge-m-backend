@@ -1,14 +1,12 @@
 import * as jwt from 'jsonwebtoken';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-// import { Model, PassportLocalModel } from 'mongoose';
-// import { InjectModel } from '@nestjs/mongoose';
 import { debug } from 'console';
-import { IUser } from 'modules/user/interface/user.interface';
-import { RegistrationStatus } from 'modules/auth/interfaces/registrationStatus.interface';
-import { UserService } from 'modules/user/service/user/user.service';
-import { JwtPayload } from 'modules/auth/interfaces/jwt-payload.interface';
-import { FirebaseService } from 'modules/website/service/firebase/firebase.service';
-import { CreateUserDto } from 'modules/user/dto/ createUser.dto';
+import { UserService } from '../../../user/service/user/user.service';
+import { FirebaseService } from '../../../website/service/firebase/firebase.service';
+import { IUser } from '../../../user/interface/user.interface';
+import { CreateUserDto } from '../../../user/dto/ createUser.dto';
+import { JwtPayload } from '../../interfaces/jwt-payload.interface';
+
 
 
 @Injectable()

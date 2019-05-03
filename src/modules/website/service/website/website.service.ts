@@ -1,9 +1,9 @@
 import { Injectable, Scope } from "@nestjs/common";
 import { Observable, of, Subject } from "rxjs";
-import { WebsiteDTO } from "models/website.dto";
 import { FirebaseService } from "../firebase/firebase.service";
 import moment = require("moment-timezone");
 import { BlockingService, IBlockedWebsite } from "../blocking/blocking.service";
+import { WebsiteDTO } from "../../../../models/website.dto";
 
 
 @Injectable({ scope: Scope.REQUEST })

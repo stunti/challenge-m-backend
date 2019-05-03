@@ -1,22 +1,12 @@
-import {
-    Module,
-    NestModule,
-    MiddlewareConsumer,
-    RequestMethod,
-  } from '@nestjs/common';
-  
-  
+import {Module} from '@nestjs/common';
+import { UserModule } from '../user/user.module';
+import { WebsiteModule } from '../website/website.module';
 import { AuthController } from './auth.controller';
-
-// Strategies
+import { AuthService } from './service/auth/auth.service';
 import { JwtStrategy } from './passport/jwt.strategy';
+import { LocalStrategy } from './passport/local.strategy';
   
 
-// import { UserModule } from 'modules/user/user.module';
-import { AuthService } from 'modules/auth/service/auth/auth.service';
-import { UserModule } from 'modules/user/user.module';
-import { WebsiteModule } from 'modules/website/website.module';
-import { LocalStrategy } from './passport/local.strategy';
   
   @Module({
     imports: [UserModule, WebsiteModule],

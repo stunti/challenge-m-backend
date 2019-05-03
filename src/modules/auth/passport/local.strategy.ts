@@ -1,9 +1,10 @@
 import { Strategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UserService } from 'modules/user/service/user/user.service';
+import { UserService } from '../../user/service/user/user.service';
 import { AuthService } from '../service/auth/auth.service';
-import { IUser } from 'modules/user/interface/user.interface';
+import { IUser } from '../../user/interface/user.interface';
+
 
 
 @Injectable()

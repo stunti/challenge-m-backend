@@ -8,14 +8,14 @@ import {
 	UseInterceptors,
   UseGuards
 } from "@nestjs/common";
-import { WebsiteService } from "modules/website/service/website/website.service";
-import { WebsiteDTO } from "models/website.dto";
+
 import { throwError, Observable } from "rxjs";
-import { scan, catchError, finalize, map  } from "rxjs/operators";
+import { scan, catchError, map  } from "rxjs/operators";
 import { plainToClass } from "class-transformer";
 import moment = require("moment-timezone");
-import { ApiModelProperty } from "@nestjs/swagger";
 import { AuthGuard } from "@nestjs/passport";
+import { WebsiteService } from "./service/website/website.service";
+import { WebsiteDTO } from "../../models/website.dto";
 
 @Controller("website")
 @UseInterceptors(ClassSerializerInterceptor)

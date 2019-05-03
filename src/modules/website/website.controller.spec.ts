@@ -1,11 +1,10 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { WebsiteController } from "./website.controller";
 
-import { WebsiteService } from "modules/website/service/website/website.service";
-import { WebsiteMockService } from "modules/website/service/website/website.service.mock";
-
 import { FirebaseService } from "./service/firebase/firebase.service";
 import { FirebaseMockService } from "./service/firebase/firebase.service.mock";
+import { WebsiteService } from "./service/website/website.service";
+import { WebsiteMockService } from "./service/website/website.service.mock";
 
 
 describe("WebsiteController", () => {

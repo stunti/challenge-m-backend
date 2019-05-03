@@ -3,7 +3,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { BlockingService } from "./blocking.service";
 import { HttpService, HttpModule } from "@nestjs/common";
 import { of } from 'rxjs';
-import Axios, { AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 import moment = require("moment-timezone");
 
 describe("BlockingService", () => {
