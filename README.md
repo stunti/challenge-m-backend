@@ -1,5 +1,4 @@
 # challenge-m-backend
-M Challenge backend
 
 ## Purpose
 Backend code for the M challenge.
